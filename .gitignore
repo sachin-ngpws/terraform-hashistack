@@ -1,0 +1,6 @@
+packer/cred.json
+.terraform
+terraform.tfstate*
+ip_*
+vault
+cluster

@@ -1,0 +1,6 @@
+{
+    "advertise_addr": "{PRIVATE-IPV4}",
+    "datacenter": "{CLOUD}-{REGION}",
+	"data_dir": "/opt/consul",
+	"retry_join": ["provider=gce project_name={PROJECT} tag_value=stack-server"]
+}

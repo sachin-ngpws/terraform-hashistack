@@ -1,0 +1,68 @@
+{   
+    "variables": {
+    "zone": "europe-west1-b",
+    "project": "ngp-intern-platform",
+    "account": "../cred.json",
+    "name": "hashistack"
+    },
+    "builders": [
+      {
+        "type": "googlecompute",
+        "account_file": "{{user `account`}}",
+        "project_id": "{{user `project`}}",
+        "source_image": "debian-10-buster-v20200714",
+        "ssh_username": "sachin",
+        "zone": "{{user `zone`}}",
+        "image_family": "{{user `name`}}",
+		"instance_name": "{{user `name`}}-{{uuid}}"
+      }
+    ],
+    "provisioners": [
+        {
+            "type": "file",
+            "source": "./consul-client.json",
+            "destination": "/tmp/consul-client.json"
+         },
+         {
+            "type": "file",
+            "source": "./nomad-client.hcl",
+            "destination": "/tmp/nomad-client.hcl"
+         },
+         {
+            "type": "file",
+            "source": "./consul-client.service",
+            "destination": "/tmp/consul-client.service"
+         },
+         {
+            "type": "file",
+            "source": "./nomad-client.service",
+            "destination": "/tmp/nomad-client.service"
+         },
+        {
+            "type": "shell",
+			"inline": [
+				"sudo apt-get update",
+				"sudo apt-get upgrade -y",
+				"sudo apt-get install -y unzip dnsmasq",
+				"curl https://releases.hashicorp.com/consul/1.8.0/consul_1.8.0_linux_amd64.zip -o /tmp/consul.zip -s",
+				"sudo unzip /tmp/consul.zip -d /usr/local/bin",
+				"sudo mkdir /etc/consul.d",
+				"sudo mkdir -p /opt/consul",
+				"sudo mv /tmp/consul-client.json /etc/consul.d/client.json",
+				"sudo mv /tmp/consul-client.service /etc/systemd/system/consul-client.service",
+
+				"curl https://releases.hashicorp.com/nomad/0.12.0/nomad_0.12.0_linux_amd64.zip -o /tmp/nomad.zip -s",
+				"sudo unzip /tmp/nomad.zip -d /usr/local/bin",
+				"sudo mkdir /etc/nomad.d",
+				"sudo mkdir -p /opt/nomad",
+				"sudo mv /tmp/nomad-client.hcl /etc/nomad.d/client.hcl",
+                "sudo mv /tmp/nomad-client.service /etc/systemd/system/nomad-client.service",
+                "sudo apt install -y apt-transport-https ca-certificates curl software-properties-common gnupg2",
+                "curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -",
+                "sudo add-apt-repository \"deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable\"",
+                "sudo apt update",
+                "sudo apt install -y docker-ce"
+			]
+        }
+    ]
+}
