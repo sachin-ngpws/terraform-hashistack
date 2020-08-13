@@ -19,6 +19,21 @@ resource "google_compute_firewall" "vpc_network" {
 
 }
 
+resource "google_compute_firewall" "cluster_network" {
+  name = "cluster-setup"
+  network = google_compute_network.vpc_network.name
+
+  allow {
+    protocol = "tcp"
+  }
+
+  allow {
+    protocol = "udp"
+  }
+
+  target_tags = ["stack-client"]
+}
+
 resource "google_compute_network" "vpc_network" {
   name = "stack-network"
 

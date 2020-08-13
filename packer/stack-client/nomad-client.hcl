@@ -11,9 +11,18 @@ datacenter = "{CLOUD}-{ZONE}"
 
 client {
   enabled      = true
+  host_volume "run" {
+     path = "/var/run"
+  }
+
 }
+
+acl {
+  enabled = true
+}
+
 
 vault {
   enabled	= true
-  address	= "http://{VAULT-IPV4}:8200"
+  address	= "http://vault.service.consul:8200"
 }

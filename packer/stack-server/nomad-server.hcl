@@ -15,6 +15,10 @@ server {
   bootstrap_expect = 1
 }
 
+acl {
+  enabled = true
+}
+
 vault {
   enabled	= true
   address	= "http://{PRIVATE-IPV4}:8200"
